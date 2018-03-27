@@ -23,6 +23,11 @@ public class GmailTests extends BaseTest {
 
     @Test(dataProvider = "validUser", dataProviderClass = DataProviders.class)
     public void test_2(User user) {
-        loginPageHelper.loginWith(user);
+        loginPageHelper.loginAs(user);
+    }
+    //TODO - check!
+    @Test(dataProvider = "invalidUser", dataProviderClass =  DataProviders.class)
+    public void test_3(User invalidUser){
+        loginPageHelper.loginAs(invalidUser);
     }
 }

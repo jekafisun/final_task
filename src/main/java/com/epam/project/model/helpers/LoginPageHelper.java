@@ -26,7 +26,7 @@ public class LoginPageHelper {
         loginPage.clickNextButton();
     }
 
-    public void loginWith(User user) {
+    public void loginAs(User user) {
         enterLogin(user);
         enterPassword(user);
         TestReporter.reportStep("Login completed");
