@@ -1,5 +1,6 @@
 package com.epam.project.model.data;
 
+import com.epam.project.core.data.properties.implementation.PropertiesData;
 import com.epam.project.model.entities.User;
 import org.testng.annotations.DataProvider;
 
@@ -15,8 +16,8 @@ public class DataProviders {
     public static Object[] validUser() {
         return new Object[]{
                 User.builder()
-                        .username("jeka.fisun.test")
-                        .password("QweAsd123")
+                        .username(PropertiesData.GLOBAL.username())
+                        .password(PropertiesData.GLOBAL.validPassword())
                         .build()};
     }
 
@@ -24,8 +25,8 @@ public class DataProviders {
     public static Object[] invalidUser() {
         return new Object[]{
                 User.builder()
-                        .username("jeka.fisun.test")
-                        .password("qweasd123")
+                        .username(PropertiesData.GLOBAL.username())
+                        .password(PropertiesData.GLOBAL.invalidPassword())
                         .build()};
     }
 }

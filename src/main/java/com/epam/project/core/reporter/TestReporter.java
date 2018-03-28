@@ -1,5 +1,6 @@
 package com.epam.project.core.reporter;
 
+import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -19,6 +20,7 @@ public class TestReporter {
     public static void reportStep(String stepMessage, Object... parameters) {
         String message = String.format(stepMessage, parameters);
         log.info(message);
+        reportAllureStep(message);
     }
 
     /**
@@ -32,6 +34,7 @@ public class TestReporter {
     public static void reportDebugStep(String debugStepMessage, Object... parameters) {
         String message = String.format(debugStepMessage, parameters);
         log.debug(message);
+        reportAllureStep(message);
     }
 
     /**
@@ -45,6 +48,7 @@ public class TestReporter {
     public static void reportWarningStep(String warningStepMessage, Object... parameters) {
         String message = String.format(warningStepMessage, parameters);
         log.warn(message);
+        reportAllureStep(message);
     }
 
     /**
@@ -58,5 +62,10 @@ public class TestReporter {
     public static void reportErrorStep(String errorStepMessage, Object... parameters) {
         String message = String.format(errorStepMessage, parameters);
         log.error(message);
+        reportAllureStep(message);
+    }
+
+    @Step("{0}")
+    private static void reportAllureStep(String message) {
     }
 }

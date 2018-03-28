@@ -1,16 +1,29 @@
 package com.epam.project.model.pages;
 
+import com.epam.project.core.data.properties.implementation.PropertiesData;
+import com.epam.project.core.reporter.TestReporter;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.stqa.selenium.factory.WebDriverPool;
 
-public abstract class BasePage {
-//    private String pageURL;
+import java.util.concurrent.TimeUnit;
+
+public abstract class BasePage<PAGE extends BasePage<PAGE>> {
+    //    private String pageURL;
     protected WebDriver driver;
-    protected WebDriverWait wait;
 
-    public BasePage(WebDriver driver) {
-        this.driver = driver;
-        wait = new WebDriverWait(driver, 10);
+    public BasePage() {
+        if ("firefox".equalsIgnoreCase(PropertiesData.GLOBAL.browser())) {
+            driver = WebDriverPool.DEFAULT.getDriver("firefox");
+         } else {
+            driver = WebDriverPool.DEFAULT.getDriver("chrome");
+
+        }
+        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+        PageFactory.initElements(driver, this);
 //        this.pageURL = pageURL;
     }
 
@@ -24,9 +37,23 @@ public abstract class BasePage {
 //        return (BasePage) this;
 //    }
 
+    /**
+     * Wait page loading.
+     * Loading locator use from constructor <b>pageLoadingLocator</b> argument.
+     *
+     * @param time wait time
+     * @return current page instance
+     */
+    public PAGE waitPageLoading(long time, WebElement webElement) {
+        WebDriverWait wait = new WebDriverWait(driver, time);
+        TestReporter.reportDebugStep("Wait loading %s page", this.getClass().getSimpleName());
+        wait.until(ExpectedConditions.visibilityOf(webElement));
+
+        return (PAGE) this;
+    }
 
 
-    public String getTitle(){
+    public String getTitle() {
         return driver.getTitle();
     }
 }

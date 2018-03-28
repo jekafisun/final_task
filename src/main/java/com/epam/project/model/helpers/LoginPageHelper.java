@@ -1,15 +1,17 @@
 package com.epam.project.model.helpers;
 
-import com.epam.project.core.reporter.TestReporter;
 import com.epam.project.model.entities.User;
 import com.epam.project.model.pages.implementation.LoginPage;
-import org.openqa.selenium.WebDriver;
 
 public class LoginPageHelper {
     private LoginPage loginPage;
 
-    public LoginPageHelper(WebDriver driver) {
-        loginPage = new LoginPage(driver);
+    public LoginPageHelper() {
+        loginPage = new LoginPage();
+    }
+
+    public String getPageTitle(){
+        return loginPage.getTitle();
     }
 
     public void openLoginPage() {
@@ -29,6 +31,9 @@ public class LoginPageHelper {
     public void loginAs(User user) {
         enterLogin(user);
         enterPassword(user);
-        TestReporter.reportStep("Login completed");
+    }
+
+    public String getErrorMessage() {
+        return loginPage.getPasswordError();
     }
 }
