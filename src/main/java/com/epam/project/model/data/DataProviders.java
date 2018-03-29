@@ -9,17 +9,8 @@ import org.testng.annotations.DataProvider;
  * Data providers class
  */
 public class DataProviders {
-    private  DataProviders(){
+    private DataProviders() {
         throw new UnsupportedOperationException("Access denied");
-    }
-
-    @DataProvider
-    public static Object[] validUser() {
-        return new Object[]{
-                User.builder()
-                        .username(PropertiesData.GLOBAL.username())
-                        .password(PropertiesData.GLOBAL.validPassword())
-                        .build()};
     }
 
     @DataProvider
@@ -32,7 +23,7 @@ public class DataProviders {
     }
 
     @DataProvider
-    public static Object[] validMessage(){
+    public static Object[] validMessage() {
         return new Object[]{
                 Message.builder()
                         .recipient(PropertiesData.GLOBAL.recipient())
@@ -40,10 +31,10 @@ public class DataProviders {
                         .attachment(null)
                         .body(PropertiesData.GLOBAL.body())
                         .build()};
-        }
+    }
 
     @DataProvider
-    public static Object[] validMessageWithAttachment(){
+    public static Object[] validMessageWithAttachment() {
         return new Object[]{
                 Message.builder()
                         .recipient(PropertiesData.GLOBAL.recipient())

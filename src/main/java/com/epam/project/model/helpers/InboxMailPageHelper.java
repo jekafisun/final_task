@@ -1,7 +1,8 @@
 package com.epam.project.model.helpers;
 
 import com.epam.project.model.entities.Message;
-import com.epam.project.model.pages.InboxMailPage;
+import com.epam.project.model.pages.implementation.InboxMailPage;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
@@ -10,8 +11,8 @@ import java.util.List;
 public class InboxMailPageHelper {
     private InboxMailPage inboxMailPage;
 
-    public InboxMailPageHelper(){
-        inboxMailPage = new InboxMailPage();
+    public InboxMailPageHelper(WebDriver driver) {
+        inboxMailPage = new InboxMailPage(driver);
     }
 
     public String getPageTitle() {
@@ -21,32 +22,36 @@ public class InboxMailPageHelper {
     private void createMessage(Message message) {
         inboxMailPage.enterRecipient(message.getRecipient());
         inboxMailPage.enterSubject(message.getSubject());
-        if(message.getAttachment()!=null){
+        if (message.getAttachment() != null) {
             inboxMailPage.addAttachment(message.getAttachment());
         }
         inboxMailPage.enterMessage(message.getBody());
     }
 
-    public void sendMessage(Message message){
+    public void sendMessage(Message message) {
         inboxMailPage.openMessageForm();
         createMessage(message);
         inboxMailPage.sendMessage();
     }
 
-    public List<String> getSubjects(){
+    public List<String> getSubjects() {
         List<String> subjects = new ArrayList<>();
-        for (WebElement e: inboxMailPage.getSubjectElements()){
+        for (WebElement e : inboxMailPage.getSubjectElements()) {
             subjects.add(e.getText());
         }
         return subjects;
     }
 
-    public boolean checkMessageIsSent(){
+    public boolean checkMessageIsSent() {
         return inboxMailPage.messageBoxDisappeared();
     }
 
     public void userLogout() {
         inboxMailPage.openUserMenu();
         inboxMailPage.clickLogout();
+    }
+
+    public boolean isAttachmentPresent() {
+        return inboxMailPage.checkAttachment();
     }
 }

@@ -1,9 +1,8 @@
-package com.epam.project.model.pages;
+package com.epam.project.model.pages.implementation;
 
 import com.epam.project.core.reporter.TestReporter;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.UnhandledAlertException;
+import com.epam.project.model.pages.BasePage;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,6 +11,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 
 public class InboxMailPage extends BasePage {
+
+    private static final int ELEMENT_TIMEOUT_SECONDS = 30;
+    private static final int TIME_OUT_IN_SECONDS = 30;
 
     @FindBy(xpath = "*//div[contains(text(), 'НАПИСАТЬ')]")
     private WebElement newMessageButton;
@@ -31,7 +33,6 @@ public class InboxMailPage extends BasePage {
     @FindBy(xpath = "*//div[contains(text(), 'Отправить')]")
     private WebElement sendButton;
 
-    //    @FindBy(xpath = "*//input[@type='file']")
     @FindBy(name = "Filedata")
     private WebElement attachmentField;
 
@@ -47,8 +48,11 @@ public class InboxMailPage extends BasePage {
     @FindBy(linkText = "Выйти")
     private WebElement logoutButton;
 
-    public InboxMailPage() {
-        super();
+    @FindBy(css = "img[alt='Приложение']")
+    private WebElement attachmentIcon;
+
+    public InboxMailPage(WebDriver driver) {
+        super(driver);
     }
 
     public String getPageTitle() {
@@ -59,7 +63,7 @@ public class InboxMailPage extends BasePage {
 
     public void openMessageForm() {
         newMessageButton.click();
-        waitPageLoading(30, newMessageBox);
+        waitPageLoading(ELEMENT_TIMEOUT_SECONDS, newMessageBox);
         TestReporter.reportDebugStep("Opened message dialog");
     }
 
@@ -86,9 +90,9 @@ public class InboxMailPage extends BasePage {
     }
 
     public void sendMessage() {
-        waitPageLoading(30, sendButton);
+        waitPageLoading(ELEMENT_TIMEOUT_SECONDS, sendButton);
         sendButton.click();
-        waitPageLoading(30, messagesSubjects.get(0));
+        waitPageLoading(ELEMENT_TIMEOUT_SECONDS, messagesSubjects.get(0));
         TestReporter.reportDebugStep("Send button was clicked");
     }
 
@@ -102,32 +106,23 @@ public class InboxMailPage extends BasePage {
         return messagesSubjects;
     }
 
+    public boolean checkAttachment() {
+        waitPageLoading(ELEMENT_TIMEOUT_SECONDS, newMessageButton);
+        TestReporter.reportDebugStep("Check presence of the attachment");
+        return attachmentIcon.isDisplayed();
+    }
+
     public void openUserMenu() {
-        try {
-            TestReporter.reportDebugStep("Click on user menu icon");
-            userMenuButton.click();
-        } catch (UnhandledAlertException f) {
-            try {
-                Alert alert = driver.switchTo().alert();
-                String alertText = alert.getText();
-                System.out.println("Alert data: " + alertText);
-                alert.accept();
-            } catch (NoAlertPresentException e) {
-                e.printStackTrace();
-            }
-        }
-//        TestReporter.reportDebugStep("Click user icon");
+        TestReporter.reportDebugStep("Click on user menu icon");
+        userMenuButton.click();
     }
 
     public void clickLogout() {
-        if (logoutButton.isEnabled()) {
-            logoutButton.click();
-            WebDriverWait wait = new WebDriverWait(driver, 30);
-            wait.until(ExpectedConditions.titleIs("Gmail"));
-            driver.manage().deleteAllCookies();
-        } else {
-            throw new UnsupportedOperationException("warning!");
-        }
-//        TestReporter.reportDebugStep("Clicked exit button");
+        TestReporter.reportDebugStep("Click on logout button");
+        logoutButton.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, TIME_OUT_IN_SECONDS);
+        wait.until(ExpectedConditions.titleIs("Gmail"));
+        driver.manage().deleteAllCookies();
     }
 }

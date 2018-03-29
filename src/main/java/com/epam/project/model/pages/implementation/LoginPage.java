@@ -3,26 +3,28 @@ package com.epam.project.model.pages.implementation;
 import com.epam.project.core.reporter.TestReporter;
 import com.epam.project.model.pages.BasePage;
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class LoginPage extends BasePage {
     private static final String PAGE_URL = "http://gmail.com";
+    private static final int ELEMENT_TIMEOUT = 30;
 
     @FindBy(xpath = "*//input[@id='identifierId']")
     private WebElement loginField;
 
-    @FindBy(xpath = "*//span[contains(node(), 'Next')]")
+    @FindBy(xpath = "*//span[contains(node(), 'Далее')]")
     private WebElement nextButton;
 
     @FindBy(xpath = "*//div[@id = 'password']//input")
     private WebElement passwordField;
 
-    @FindBy(xpath = "*//div[contains(text(), 'Wrong password')]")
+    @FindBy(xpath = "*//div[contains(text(), 'Неверный пароль')]")
     private WebElement passwordError;
 
-    public LoginPage() {
-        super();
+    public LoginPage(WebDriver driver) {
+        super(driver);
     }
 
     public LoginPage openPage() {
@@ -43,7 +45,7 @@ public class LoginPage extends BasePage {
     }
 
     public void enterPassword(String pass) {
-        waitPageLoading(10, passwordField);
+        waitPageLoading(ELEMENT_TIMEOUT, passwordField);
         passwordField.clear();
         TestReporter.reportDebugStep("Password field cleared");
         passwordField.sendKeys(pass);
@@ -56,7 +58,7 @@ public class LoginPage extends BasePage {
     }
 
     public String getPasswordError() {
-        waitPageLoading(10, passwordError);
+        waitPageLoading(ELEMENT_TIMEOUT, passwordError);
         TestReporter.reportDebugStep("Login failed, wrong password");
         return passwordError.getText();
     }

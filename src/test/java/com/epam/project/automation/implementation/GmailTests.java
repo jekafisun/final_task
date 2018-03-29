@@ -1,6 +1,7 @@
 package com.epam.project.automation.implementation;
 
 import com.epam.project.automation.BaseTest;
+import com.epam.project.core.data.properties.implementation.PropertiesData;
 import com.epam.project.model.data.DataProviders;
 import com.epam.project.model.entities.Message;
 import com.epam.project.model.entities.User;
@@ -14,17 +15,20 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.*;
 
 
 public class GmailTests extends BaseTest {
+    private User validUser;
 
     @BeforeMethod(description = "Initializing page helpers")
     public void initPageObjects() {
-        loginPageHelper = new LoginPageHelper();
-        inboxMailPageHelper = new InboxMailPageHelper();
+        loginPageHelper = new LoginPageHelper(driver);
+        inboxMailPageHelper = new InboxMailPageHelper(driver);
+        validUser = User.builder()
+                .username(PropertiesData.GLOBAL.username())
+                .password(PropertiesData.GLOBAL.validPassword())
+                .build();
     }
 
     @Test
@@ -35,13 +39,13 @@ public class GmailTests extends BaseTest {
         assertThat(loginPageHelper.getPageTitle(), equalToIgnoringCase("gmail"));
     }
 
-    @Test(dataProvider = "validUser", dataProviderClass = DataProviders.class)
+    @Test
     @Severity(SeverityLevel.CRITICAL)
     @Description("Check login of valid user")
-    public void checkValidUserCanLoginTest(User user) {
+    public void checkValidUserCanLoginTest() {
         loginPageHelper.openLoginPage();
-        loginPageHelper.loginAs(user);
-        assertThat(inboxMailPageHelper.getPageTitle(), containsString(user.getUsername()));
+        loginPageHelper.loginAs(validUser);
+        assertThat(inboxMailPageHelper.getPageTitle(), containsString(validUser.getUsername()));
         inboxMailPageHelper.userLogout();
     }
 
@@ -51,56 +55,35 @@ public class GmailTests extends BaseTest {
     public void checkInvalidUserCanNotLoginTest(User invalidUser) {
         loginPageHelper.openLoginPage();
         loginPageHelper.loginAs(invalidUser);
-        assertThat(loginPageHelper.getErrorMessage(), containsString("Wrong password"));
+        assertThat(loginPageHelper.getErrorMessage(), containsString("Неверный пароль"));
     }
 
-    @Test(dataProvider = "validMessage",dataProviderClass = DataProviders.class)
+    @Test(dataProvider = "validMessage", dataProviderClass = DataProviders.class)
     @Description("Check that the user can send a completed letter")
-    public void checkSendCompletedLetterTest(Message message){
-        User user = User.builder().username("jeka.fisun.test").password("QweAsd123").build();
+    public void checkSendCompletedLetterTest(Message message) {
         loginPageHelper.openLoginPage();
-        loginPageHelper.loginAs(user);
+        loginPageHelper.loginAs(validUser);
         inboxMailPageHelper.sendMessage(message);
         Assert.assertTrue(inboxMailPageHelper.checkMessageIsSent());
         inboxMailPageHelper.userLogout();
     }
 
-    @Test(dataProvider = "validMessage",dataProviderClass = DataProviders.class,dependsOnMethods = "checkSendCompletedLetterTest")
+    @Test(dataProvider = "validMessage", dataProviderClass = DataProviders.class, dependsOnMethods = "checkSendCompletedLetterTest")
     @Description("Check that the user receive sent message")
-    public void checkReceivingOfMessageTest(Message message){
-        User user = User.builder().username("jeka.fisun.test").password("QweAsd123").build();
+    public void checkReceivingOfMessageTest(Message message) {
         loginPageHelper.openLoginPage();
-        loginPageHelper.loginAs(user);
+        loginPageHelper.loginAs(validUser);
         assertThat(inboxMailPageHelper.getSubjects(), hasItem(message.getSubject()));
         inboxMailPageHelper.userLogout();
     }
 
-    @Test(enabled = false,dataProvider = "validMessageWithAttachment",dataProviderClass = DataProviders.class)
+    @Test(dataProvider = "validMessageWithAttachment", dataProviderClass = DataProviders.class)
     @Description("Check sending message with attachment")
-    public void checkSendMessageWithAttachment(Message message){
-        User user = User.builder().username("jeka.fisun.test").password("QweAsd123").build();
+    public void checkSendMessageWithAttachment(Message message) {
         loginPageHelper.openLoginPage();
-        loginPageHelper.loginAs(user);
+        loginPageHelper.loginAs(validUser);
         inboxMailPageHelper.sendMessage(message);
-        assertThat(inboxMailPageHelper.getSubjects(), hasItem(message.getSubject()));
+        Assert.assertTrue(inboxMailPageHelper.isAttachmentPresent());
         inboxMailPageHelper.userLogout();
     }
-
-//    @AfterMethod
-//    public void tearDown(){
-//        try {
-//            driver.manage().deleteAllCookies();
-//        } catch (UnhandledAlertException f) {
-//            try {
-//                Alert alert = driver.switchTo().alert();
-//                String alertText = alert.getText();
-//                System.out.println("Alert data: " + alertText);
-//                alert.accept();
-//            } catch (NoAlertPresentException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//    }
-
 }
