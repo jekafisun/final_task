@@ -21,7 +21,7 @@ public class CustomTestListener extends TestListenerAdapter {
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        makeScreenshot();
+//        makeScreenshot();
         reportStep("Test SUCCESS: %s" , result.getName());
     }
 

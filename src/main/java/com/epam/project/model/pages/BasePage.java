@@ -22,7 +22,8 @@ public abstract class BasePage<PAGE extends BasePage<PAGE>> {
             driver = WebDriverPool.DEFAULT.getDriver("chrome");
 
         }
-        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(60,TimeUnit.SECONDS);
         PageFactory.initElements(driver, this);
 //        this.pageURL = pageURL;
     }
@@ -47,7 +48,7 @@ public abstract class BasePage<PAGE extends BasePage<PAGE>> {
     public PAGE waitPageLoading(long time, WebElement webElement) {
         WebDriverWait wait = new WebDriverWait(driver, time);
         TestReporter.reportDebugStep("Wait loading %s page", this.getClass().getSimpleName());
-        wait.until(ExpectedConditions.visibilityOf(webElement));
+        wait.until(ExpectedConditions.elementToBeClickable(webElement));
 
         return (PAGE) this;
     }

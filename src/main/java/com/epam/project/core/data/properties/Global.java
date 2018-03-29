@@ -15,4 +15,16 @@ public interface Global extends Config {
 
     @Key("user.password.invalid")
     String invalidPassword();
+
+    @Key("message.recipient")
+    String recipient();
+
+    @Key("message.subject")
+    String subject();
+
+    @Key("message.body")
+    String body();
+
+    @Key("message.attachment")
+    String attachment();
 }

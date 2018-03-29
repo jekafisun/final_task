@@ -9,16 +9,16 @@ import org.openqa.selenium.support.FindBy;
 public class LoginPage extends BasePage {
     private static final String PAGE_URL = "http://gmail.com";
 
-    @FindBy(xpath = "*//input[@id = 'identifierId']")
+    @FindBy(xpath = "*//input[@id='identifierId']")
     private WebElement loginField;
 
-    @FindBy(xpath = "*//span[contains(node(), 'Далее')]")
+    @FindBy(xpath = "*//span[contains(node(), 'Next')]")
     private WebElement nextButton;
 
     @FindBy(xpath = "*//div[@id = 'password']//input")
     private WebElement passwordField;
 
-    @FindBy(xpath = "*//div[contains(text(), 'Неверный пароль')]")
+    @FindBy(xpath = "*//div[contains(text(), 'Wrong password')]")
     private WebElement passwordError;
 
     public LoginPage() {
@@ -27,8 +27,8 @@ public class LoginPage extends BasePage {
 
     public LoginPage openPage() {
         if (StringUtils.isNotEmpty(PAGE_URL)) {
-            TestReporter.reportStep("Page %s was opened", this.getClass().getSimpleName());
             driver.get(PAGE_URL);
+            TestReporter.reportStep("Page %s was opened", this.getClass().getSimpleName());
         } else {
             throw new UnsupportedOperationException("Page URL not established");
         }
