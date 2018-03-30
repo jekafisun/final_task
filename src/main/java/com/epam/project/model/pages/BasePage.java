@@ -10,12 +10,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.concurrent.TimeUnit;
 
 public abstract class BasePage<P extends BasePage> {
+
+    private static final int IMPLICITY_WAIT_TIMEOUT = 30;
+    private static final int PAGE_LOAD_TIMEOUT = 60;
     protected WebDriver driver;
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(IMPLICITY_WAIT_TIMEOUT, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(PAGE_LOAD_TIMEOUT, TimeUnit.SECONDS);
         PageFactory.initElements(driver, this);
     }
 

@@ -5,6 +5,7 @@ import com.epam.project.model.pages.implementation.LoginPage;
 import org.openqa.selenium.WebDriver;
 
 public class LoginPageHelper {
+
     private LoginPage loginPage;
 
     public LoginPageHelper(WebDriver driver) {

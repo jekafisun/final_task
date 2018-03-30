@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.*;
 
 
 public class GmailTests extends BaseTest {
+
     private User validUser;
 
     @BeforeMethod(description = "Initializing page helpers")
