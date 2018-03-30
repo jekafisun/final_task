@@ -46,7 +46,7 @@ public class LoginPage extends BasePage {
     }
 
     public void enterPassword(String pass) {
-        waitPageLoading(ELEMENT_TIMEOUT, passwordField);
+        waitElementIsVisible(ELEMENT_TIMEOUT, passwordField);
         passwordField.clear();
         TestReporter.reportDebugStep("Password field cleared");
         passwordField.sendKeys(pass);
@@ -59,7 +59,7 @@ public class LoginPage extends BasePage {
     }
 
     public String getPasswordError() {
-        waitPageLoading(ELEMENT_TIMEOUT, passwordError);
+        waitElementIsVisible(ELEMENT_TIMEOUT, passwordError);
         TestReporter.reportDebugStep("Login failed, wrong password");
         return passwordError.getText();
     }

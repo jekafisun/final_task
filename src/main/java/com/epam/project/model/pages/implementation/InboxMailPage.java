@@ -36,16 +36,16 @@ public class InboxMailPage extends BasePage {
     @FindBy(name = "Filedata")
     private WebElement attachmentField;
 
+    @FindBy(css = "div.dL>div")
+    private WebElement deleteAttachment;
+
     @FindBy(css = "span.bog>b")
     private List<WebElement> messagesSubjects;
 
     @FindBy(css = "span.gb_db")
     private WebElement userMenuButton;
 
-    @FindBy(css = "div.gb_Eb.gbip")
-    private WebElement userIcon;
-
-    @FindBy(linkText = "Выйти")
+    @FindBy(xpath = "*//a[contains(text(),'Выйти')]")
     private WebElement logoutButton;
 
     @FindBy(css = "img[alt='Приложение']")
@@ -54,19 +54,23 @@ public class InboxMailPage extends BasePage {
     @FindBy(css = "div[aria-label='Информация об аккаунте']")
     private WebElement userPopupMenu;
 
+    @FindBy(xpath = "*//div[contains(text(),'Письмо отправлено.')]/span")
+    private WebElement openSentMessageLink;
+
+
     public InboxMailPage(WebDriver driver) {
         super(driver);
     }
 
     public String getPageTitle() {
         TestReporter.reportStep("Login completed");
-        waitPageLoading(10, newMessageButton);
+        waitElementIsVisible(10, newMessageButton);
         return getTitle();
     }
 
     public void openMessageForm() {
         newMessageButton.click();
-        waitPageLoading(ELEMENT_TIMEOUT_SECONDS, newMessageBox);
+        waitElementIsVisible(ELEMENT_TIMEOUT_SECONDS, newMessageBox);
         TestReporter.reportDebugStep("Opened message dialog");
     }
 
@@ -93,9 +97,9 @@ public class InboxMailPage extends BasePage {
     }
 
     public void sendMessage() {
-        waitPageLoading(ELEMENT_TIMEOUT_SECONDS, sendButton);
+        waitElementIsVisible(ELEMENT_TIMEOUT_SECONDS, sendButton);
         sendButton.click();
-        waitPageLoading(ELEMENT_TIMEOUT_SECONDS, messagesSubjects.get(0));
+        waitElementDisappear(ELEMENT_TIMEOUT_SECONDS, newMessageBox);
         TestReporter.reportDebugStep("Send button was clicked");
     }
 
@@ -110,7 +114,7 @@ public class InboxMailPage extends BasePage {
     }
 
     public boolean checkAttachment() {
-        waitPageLoading(ELEMENT_TIMEOUT_SECONDS, newMessageButton);
+        waitElementIsVisible(ELEMENT_TIMEOUT_SECONDS, newMessageButton);
         TestReporter.reportDebugStep("Check presence of the attachment");
         return attachmentIcon.isDisplayed();
     }
@@ -118,7 +122,6 @@ public class InboxMailPage extends BasePage {
     public void openUserMenu() {
         TestReporter.reportDebugStep("Click on user menu icon");
         userMenuButton.click();
-        waitPageLoading(5, userPopupMenu);
     }
 
     public void clickLogout() {

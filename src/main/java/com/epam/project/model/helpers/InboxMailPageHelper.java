@@ -20,11 +20,11 @@ public class InboxMailPageHelper {
     }
 
     private void createMessage(Message message) {
-        inboxMailPage.enterRecipient(message.getRecipient());
-        inboxMailPage.enterSubject(message.getSubject());
         if (message.getAttachment() != null) {
             inboxMailPage.addAttachment(message.getAttachment());
         }
+        inboxMailPage.enterRecipient(message.getRecipient());
+        inboxMailPage.enterSubject(message.getSubject());
         inboxMailPage.enterMessage(message.getBody());
     }
 

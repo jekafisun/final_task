@@ -29,14 +29,21 @@ public abstract class BasePage<P extends BasePage> {
      * @param time wait time
      * @return current page instance
      */
-    protected P waitPageLoading(long time, WebElement webElement) {
+    protected P waitElementIsVisible(long time, WebElement webElement) {
         WebDriverWait wait = new WebDriverWait(driver, time);
+        wait.until(ExpectedConditions.visibilityOf(webElement));
         TestReporter.reportDebugStep("Wait loading %s page", this.getClass().getSimpleName());
-        wait.until(ExpectedConditions.elementToBeClickable(webElement));
 
         return (P) this;
     }
 
+    protected P waitElementDisappear(long time, WebElement webElement) {
+        WebDriverWait wait = new WebDriverWait(driver, time);
+        TestReporter.reportDebugStep("Wait loading %s page", this.getClass().getSimpleName());
+        wait.until(ExpectedConditions.invisibilityOf(webElement));
+
+        return (P) this;
+    }
 
     public String getTitle() {
         return driver.getTitle();
