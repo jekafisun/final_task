@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 
-public abstract class BasePage<P extends BasePage<P>> {
+public abstract class BasePage<P extends BasePage> {
     protected WebDriver driver;
 
     public BasePage(WebDriver driver) {

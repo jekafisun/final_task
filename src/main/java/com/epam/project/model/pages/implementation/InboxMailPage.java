@@ -51,6 +51,9 @@ public class InboxMailPage extends BasePage {
     @FindBy(css = "img[alt='Приложение']")
     private WebElement attachmentIcon;
 
+    @FindBy(css = "div[aria-label='Информация об аккаунте']")
+    private WebElement userPopupMenu;
+
     public InboxMailPage(WebDriver driver) {
         super(driver);
     }
@@ -115,6 +118,7 @@ public class InboxMailPage extends BasePage {
     public void openUserMenu() {
         TestReporter.reportDebugStep("Click on user menu icon");
         userMenuButton.click();
+        waitPageLoading(5, userPopupMenu);
     }
 
     public void clickLogout() {
